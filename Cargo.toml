@@ -1,0 +1,12 @@
+[package]
+name = "guessing_game"
+version = "0.1.0"
+authors = ["glynam <lynamgaz@yahoo.ie>"]
+
+[dependencies]
+iron = "0.5.1"
+mime = "0.2.3"
+router = "0.5.1"
+urlencoded = "0.5.0"
+simple_logger = "0.5.0"
+log = "0.4.1"
