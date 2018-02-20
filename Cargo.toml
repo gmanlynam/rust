@@ -1,5 +1,5 @@
 [package]
-name = "guessing_game"
+name = "mars_rover"
 version = "0.1.0"
 authors = ["glynam <lynamgaz@yahoo.ie>"]
 

@@ -14,29 +14,19 @@ use std::fmt;
 use iron::prelude::*;
 use iron::status;
 use router::Router;
-use log::{Log};
+
 fn main() {
+
 
     simple_logger::init_with_level(log::Level::Info).unwrap();
 
     let mut router = Router::new();
     router.get("/", get_form, "root");
     router.post("/gcd", post_command, "gcd");
-    let mut chain = Chain::new(router);
+    let chain = Chain::new(router);
 
-    error!("Serving on http://localhost:3000...");
-    Iron::new(chain).http("localhost:3000").unwrap();
-
-    let grid_size = [3,2];
-
-    let x = 0i32;
-    let y = 0i32;
-    let facing = Direction::West;
-
-    let commands =  vec!['f','f','b','l','l','f'];
-
-    let (cord, lefty, direction) = process_command(x,y, commands, facing);
-    info!("The total spaces moved was: {} forward, {} left, facing {}", cord % grid_size[0], lefty % grid_size[1], direction);
+    info!("Serving on http://localhost:8080...");
+    Iron::new(chain).http("localhost:8080").unwrap();
 }
 
 fn process_command(x : i32, y: i32, commands : Vec<char>, mut direction: Direction) -> (i32, i32, Direction) {
@@ -123,11 +113,11 @@ fn post_command(request: &mut Request) -> IronResult<Response> {
 
     let result = process_command(0,0, numbers, Direction::North);
 
+    let body = format!("{{\"forward\": {}, \"left\": {}, \"direction\": \"{}\"}}",
+                          result.0, result.1, result.2);
     response.set_mut(status::Ok);
-    response.set_mut(mime!(Text/Html; Charset=Utf8));
-    response.set_mut(
-        format!("The rover has moved forward {}, left {} and is facing {}\n",
-                result.0, result.1, result.2));
+    response.set_mut(mime!(Application/Json));
+    response.set_mut(body);
     Ok(response)
 
 }
