@@ -29,7 +29,7 @@ fn main() {
     Iron::new(chain).http("localhost:8080").unwrap();
 }
 
-fn process_command(x : i32, y: i32, commands : Vec<char>, mut direction: Direction) -> (i32, i32, Direction) {
+pub fn process_command(x : i32, y: i32, commands : Vec<char>, mut direction: Direction) -> (i32, i32, Direction) {
     let mut cord = x;
     let mut lefty = y;
     commands.iter().for_each(|s| match *s {
@@ -123,7 +123,7 @@ fn post_command(request: &mut Request) -> IronResult<Response> {
 }
 
 #[derive(Debug, PartialEq)]
-enum Direction {
+pub enum Direction {
     North,
     West,
     South,
@@ -141,19 +141,23 @@ impl fmt::Display for Direction {
     }
 }
 
-#[test]
-fn test_rover() {
-    assert_eq!(process_command(0i32,0i32, vec!['f','f','f'], Direction::North), (3i32,0i32, Direction::North));
-}
 
-#[test]
-fn test_rover_changes_direction() {
-    let comm = process_command(0i32, 0i32, vec!['l'], Direction::North);
-    assert_ne!(comm.2, Direction::North);
-}
+#[cfg(test)]
+mod test_rover {
+    #[test]
+    fn test_rover() {
+        assert_eq!(main.process_command(0i32, 0i32, vec!['f', 'f', 'f'], Direction::North), (3i32, 0i32, Direction::North));
+    }
 
-#[test]
-fn test_rover_goes_in_correct_direction() {
-    let comm = process_command(0i32, 0i32, vec!['l', 'r', 'r', 'r', 'r', 'r'], Direction::North);
-    assert_eq!(comm.2, Direction::North);
+    #[test]
+    fn test_rover_changes_direction() {
+        let comm = process_command(0i32, 0i32, vec!['l'], Direction::North);
+        assert_ne!(comm.2, Direction::North);
+    }
+
+    #[test]
+    fn test_rover_goes_in_correct_direction() {
+        let comm = process_command(0i32, 0i32, vec!['l', 'r', 'r', 'r', 'r', 'r'], Direction::North);
+        assert_eq!(comm.2, Direction::North);
+    }
 }
