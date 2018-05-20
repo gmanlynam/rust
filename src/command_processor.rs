@@ -7,6 +7,9 @@ use self::urlencoded::UrlEncodedBody;
 use iron::prelude::*;
 use iron::status;
 use direction::Direction;
+use std::fs::File;
+use std::io::Read;
+
 
 
 fn process_command(x : i32, y: i32, commands : Vec<char>, mut direction: Direction) -> (i32, i32, Direction) {
@@ -83,11 +86,23 @@ pub fn post_command(request: &mut Request) -> IronResult<Response> {
 
     let result = process_command(0,0, numbers, Direction::North);
 
+    //not actually context relative :/
+    let mut f = File::open("response.html").expect("file not found");
+
+    let mut contents = String::new();
+    f.read_to_string(&mut contents)
+        .expect("something went wrong reading the file");
+
     let body = format!("{{\"forward\": {}, \"left\": {}, \"direction\": \"{}\"}}",
                        result.0, result.1, result.2);
+
+
+//    contents.replace("body", "test");
+    contents = contents.replace("{response}", & body);
+
     response.set_mut(status::Ok);
-    response.set_mut(mime!(Application/Json));
-    response.set_mut(body);
+    response.set_mut(mime!(Text/Html; Charset=Utf8));
+    response.set_mut(contents);
     Ok(response)
 
 }
