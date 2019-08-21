@@ -24,7 +24,7 @@ fn main() {
     simple_logger::init_with_level(log::Level::Info).unwrap();
 
     let mut router = Router::new();
-    router.get("/", controllers::get_form , "form");
+    router.get( "/", controllers::get_form , "form");
     router.post("/gcd", post_command, "gcd");
     let chain = Chain::new(router);
 

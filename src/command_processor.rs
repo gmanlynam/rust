@@ -16,33 +16,33 @@ fn process_command(x : i32, y: i32, commands : Vec<char>, mut direction: Directi
             'f' => {
                 match direction {
                     Direction::North => { cord += 1 },
-                    Direction::West => { lefty += 1 },
+                    Direction::West => { lefty -= 1 },
                     Direction::South => { cord -= 1 },
-                    Direction::East => { lefty -= 1 }
+                    Direction::East => { lefty += 1 }
                 }
             },
             'b' => {
                 match direction {
                     Direction::North => { cord -= 1 },
-                    Direction::West => { lefty -= 1 },
+                    Direction::West => { lefty += 1 },
                     Direction::South => { cord += 1 },
-                    Direction::East => { lefty += 1 }
+                    Direction::East => { lefty -= 1 }
                 }
             },
             'l' => {
                 match direction {
-                    Direction::North => { direction = Direction::West },
-                    Direction::West => { direction = Direction::South },
-                    Direction::South => { direction = Direction::East },
-                    Direction::East => { direction = Direction::North }
+                    Direction::North => { direction =  Direction::West },
+                    Direction::West => { direction =   Direction::South },
+                    Direction::South => { direction =   Direction::East },
+                    Direction::East => { direction =  Direction::North }
                 }
             },
             'r' => {
                 match direction {
-                    Direction::North => { direction = Direction::East },
-                    Direction::West => { direction = Direction::North },
-                    Direction::South => { direction = Direction::West },
-                    Direction::East => { direction = Direction::South }
+                    Direction::North => { direction =   Direction::East },
+                    Direction::West => { direction =   Direction::North },
+                    Direction::South => { direction =   Direction::West },
+                    Direction::East => { direction =   Direction::South }
                 }
             },
             _ => error!("Received an invalid command")
@@ -50,7 +50,7 @@ fn process_command(x : i32, y: i32, commands : Vec<char>, mut direction: Directi
         return (cord, lefty, direction);
 }
 
-pub fn post_command(request: &mut Request) -> IronResult<Response> {
+pub fn post_command(request: &mut Request) -> Result<Response, IronError> {
     let mut response = Response::new();
 
     info!("Received a call to process command");
